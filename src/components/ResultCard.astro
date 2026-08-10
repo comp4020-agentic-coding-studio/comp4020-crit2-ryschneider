@@ -15,6 +15,12 @@ const area = getArea(route.areaId);
 const region = getRegion(area.regionId);
 const gradeBand = getGradeBand(route.grade);
 
+const areaSlug = area.name
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/^-|-$/g, "");
+const thecragHref = `https://www.thecrag.com/climbing/australia/${areaSlug}`;
+
 const styleLabels: Record<Route["style"], string> = {
   trad: "Trad",
   sport: "Sport",
@@ -33,7 +39,7 @@ const styleLabels: Record<Route["style"], string> = {
       {styleLabels[route.style]}
     </span>
   </div>
-  <h3 class="result-card-name">{route.name}</h3>
+  <h3 class="result-card-name"><a href={thecragHref}>{route.name}</a></h3>
   <p class="result-card-breadcrumb">{region.name} &rsaquo; {area.name}</p>
   <div class="result-card-stars">
     <span aria-hidden="true" class="result-card-stars-icons">
@@ -134,6 +140,16 @@ const styleLabels: Record<Route["style"], string> = {
   .result-card-name {
     margin: 0;
     font-size: 1.1rem;
+  }
+
+  .result-card-name a {
+    color: var(--color-link);
+    text-decoration: none;
+  }
+
+  .result-card-name a:hover,
+  .result-card-name a:focus-visible {
+    text-decoration: underline;
   }
 
   .result-card-breadcrumb {
