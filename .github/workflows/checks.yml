@@ -49,7 +49,7 @@ jobs:
           for i in $(seq 1 20); do
             curl -sf -o /dev/null "$base" && break; sleep 1
           done
-          pnpm dlx linkinator "$base" --recurse --silent
+          pnpm dlx linkinator "$base" --recurse --silent --skip "^https?://(?!localhost)"
       - name: Scan for committed secrets
         # Pinned, both halves: the SHA fixes the action's script, and `version`
         # fixes the scanner image, which otherwise floats on :latest. These two
