@@ -1,0 +1,112 @@
+---
+import { getArea, getRegion, type Route } from "../data/climbing-areas";
+
+interface Props {
+  route: Route;
+}
+
+const { route } = Astro.props;
+const area = getArea(route.areaId);
+const region = getRegion(area.regionId);
+
+const styleLabels: Record<Route["style"], string> = {
+  trad: "Trad",
+  sport: "Sport",
+  bouldering: "Bouldering",
+  "top-rope": "Top rope",
+};
+---
+
+<article class="result-card">
+  <div class="result-card-header">
+    <span class="result-card-grade">{route.gradeLabel}</span>
+    <span class="result-card-style">{styleLabels[route.style]}</span>
+  </div>
+  <h4 class="result-card-name">{route.name}</h4>
+  <p class="result-card-breadcrumb">{region.name} &rsaquo; {area.name}</p>
+  <div class="result-card-stars">
+    <span aria-hidden="true" class="result-card-stars-icons">
+      {
+        Array.from({ length: 4 }).map((_, index) => (
+          <svg viewBox="0 0 20 20" class={index < route.stars ? "is-filled" : ""}>
+            <path d="M10 1l2.6 6.2 6.7.5-5.1 4.4 1.6 6.5L10 15.3 4.2 18.6l1.6-6.5L.7 7.7l6.7-.5z" />
+          </svg>
+        ))
+      }
+    </span>
+    <span class="visually-hidden">{route.stars} out of 4 stars</span>
+  </div>
+  <p class="result-card-note">{route.note}</p>
+</article>
+
+<style>
+  .result-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    background: var(--color-surface);
+  }
+
+  .result-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .result-card-grade {
+    font-weight: 700;
+    background: var(--color-accent-soft);
+    padding: 0.15rem 0.5rem;
+    border-radius: 0.25rem;
+  }
+
+  .result-card-style {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .result-card-name {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+
+  .result-card-breadcrumb {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+
+  .result-card-stars-icons {
+    display: inline-flex;
+    gap: 0.15rem;
+  }
+
+  .result-card-stars-icons svg {
+    width: 1rem;
+    height: 1rem;
+    fill: var(--color-border);
+  }
+
+  .result-card-stars-icons svg.is-filled {
+    fill: var(--color-accent);
+  }
+
+  .result-card-note {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+</style>

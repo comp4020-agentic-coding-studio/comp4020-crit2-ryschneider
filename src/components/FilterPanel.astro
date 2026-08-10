@@ -1,0 +1,295 @@
+---
+const styles = [
+  { value: "trad", label: "Trad" },
+  { value: "sport", label: "Sport" },
+  { value: "bouldering", label: "Bouldering" },
+  { value: "top-rope", label: "Top rope" },
+];
+
+const starOptions = [
+  { value: "any", label: "Any" },
+  { value: "2", label: "2+" },
+  { value: "3", label: "3+" },
+  { value: "4", label: "4" },
+];
+
+const rockTypes = ["Sandstone", "Granite", "Volcanic", "Quartzite"];
+const aspects = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+const heights = ["Under 10m", "10–20m", "Over 20m"];
+const conditions = ["Dry only", "OK if seeping", "Shaded"];
+---
+
+<section class="filter-panel" aria-labelledby="filter-panel-heading">
+  <h3 id="filter-panel-heading">Filters</h3>
+
+  <div class="filter-group">
+    <span class="filter-group-label" id="grade-label">Grade (Ewbank)</span>
+    <div class="grade-slider" data-grade-slider>
+      <div class="grade-slider-track">
+        <div class="grade-slider-highlight" data-grade-highlight></div>
+      </div>
+      <input
+        type="range"
+        id="grade-min"
+        min="1"
+        max="32"
+        value="10"
+        aria-label="Minimum grade"
+        data-grade-min
+      />
+      <input
+        type="range"
+        id="grade-max"
+        min="1"
+        max="32"
+        value="24"
+        aria-label="Maximum grade"
+        data-grade-max
+      />
+    </div>
+    <p class="grade-slider-readout">
+      <output for="grade-min" data-grade-min-output>10</output>
+      &ndash;
+      <output for="grade-max" data-grade-max-output>24</output>
+    </p>
+  </div>
+
+  <fieldset class="filter-group">
+    <legend class="filter-group-label">Style</legend>
+    <div class="chip-row">
+      {
+        styles.map((style) => (
+          <label class="chip">
+            <input type="checkbox" name="style" value={style.value} />
+            <span>{style.label}</span>
+          </label>
+        ))
+      }
+    </div>
+  </fieldset>
+
+  <fieldset class="filter-group">
+    <legend class="filter-group-label">Minimum stars</legend>
+    <div class="chip-row">
+      {
+        starOptions.map((option, index) => (
+          <label class="chip">
+            <input
+              type="radio"
+              name="stars"
+              value={option.value}
+              checked={index === 0}
+            />
+            <span>{option.label}</span>
+          </label>
+        ))
+      }
+    </div>
+  </fieldset>
+
+  <details class="more-filters">
+    <summary>More filters</summary>
+
+    <fieldset class="filter-group">
+      <legend class="filter-group-label">Rock type</legend>
+      <div class="chip-row">
+        {
+          rockTypes.map((type) => (
+            <label class="chip">
+              <input type="checkbox" name="rock-type" value={type} />
+              <span>{type}</span>
+            </label>
+          ))
+        }
+      </div>
+    </fieldset>
+
+    <fieldset class="filter-group">
+      <legend class="filter-group-label">Aspect</legend>
+      <div class="chip-row">
+        {
+          aspects.map((aspect) => (
+            <label class="chip chip-compact">
+              <input type="checkbox" name="aspect" value={aspect} />
+              <span>{aspect}</span>
+            </label>
+          ))
+        }
+      </div>
+    </fieldset>
+
+    <fieldset class="filter-group">
+      <legend class="filter-group-label">Height</legend>
+      <div class="chip-row">
+        {
+          heights.map((height) => (
+            <label class="chip">
+              <input type="checkbox" name="height" value={height} />
+              <span>{height}</span>
+            </label>
+          ))
+        }
+      </div>
+    </fieldset>
+
+    <fieldset class="filter-group">
+      <legend class="filter-group-label">Conditions</legend>
+      <div class="chip-row">
+        {
+          conditions.map((condition) => (
+            <label class="chip">
+              <input type="checkbox" name="conditions" value={condition} />
+              <span>{condition}</span>
+            </label>
+          ))
+        }
+      </div>
+    </fieldset>
+  </details>
+</section>
+
+<style>
+  .filter-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .filter-group-label {
+    font-weight: 600;
+  }
+
+  .grade-slider {
+    position: relative;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .grade-slider-track {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 0.3rem;
+    background: var(--color-border);
+    border-radius: 999px;
+  }
+
+  .grade-slider-highlight {
+    position: absolute;
+    height: 100%;
+    background: var(--color-accent);
+    border-radius: 999px;
+    left: var(--grade-min-percent, 0%);
+    right: var(--grade-max-percent, 0%);
+  }
+
+  .grade-slider input[type="range"] {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    margin: 0;
+    appearance: none;
+    background: transparent;
+    pointer-events: none;
+  }
+
+  .grade-slider input[type="range"]::-webkit-slider-runnable-track {
+    background: transparent;
+  }
+
+  .grade-slider input[type="range"]::-moz-range-track {
+    background: transparent;
+  }
+
+  .grade-slider input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 50%;
+    background: var(--color-accent-dark);
+    border: 2px solid var(--color-surface);
+    pointer-events: auto;
+    cursor: pointer;
+  }
+
+  .grade-slider input[type="range"]::-moz-range-thumb {
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 50%;
+    background: var(--color-accent-dark);
+    border: 2px solid var(--color-surface);
+    pointer-events: auto;
+    cursor: pointer;
+  }
+
+  .grade-slider-readout {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    background: var(--color-surface);
+    transition: background 0.15s ease;
+  }
+
+  .chip-compact {
+    padding: 0.35rem 0.6rem;
+  }
+
+  .chip input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .chip:has(input:checked) {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    border-color: var(--color-accent-dark);
+  }
+
+  .chip:has(input:focus-visible) {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  .more-filters {
+    border-top: 1px solid var(--color-border);
+    padding-top: 0.75rem;
+  }
+
+  .more-filters summary {
+    cursor: pointer;
+    font-weight: 600;
+    padding: 0.25rem 0;
+  }
+
+  .more-filters .filter-group {
+    margin-top: 1rem;
+  }
+</style>

@@ -1,0 +1,113 @@
+---
+import AreaPicker from "../components/AreaPicker.astro";
+import FilterPanel from "../components/FilterPanel.astro";
+import ResultCard from "../components/ResultCard.astro";
+import Layout from "../layouts/Layout.astro";
+import { routes } from "../data/climbing-areas";
+---
+
+<Layout title="thecrag.com search, redesigned">
+  <header class="site-header">
+    <nav aria-label="Primary">
+      <a href="./">Home</a>
+    </nav>
+  </header>
+  <main>
+    <h1>A friendlier way to find a climb</h1>
+    <p class="page-intro">
+      An unsolicited redesign of <a href="https://www.thecrag.com"
+        >thecrag.com</a
+      >'s route search — pick an area from a map instead of a breadcrumb, and
+      filter with sliders and chips instead of a long list of checkboxes.
+      This is a static prototype: choosing an area or a filter below changes
+      how it looks, not which routes appear in the results.
+    </p>
+
+    <section class="search-layout" aria-labelledby="search-heading">
+      <h2 id="search-heading" class="visually-hidden">Search</h2>
+      <div class="search-panel">
+        <AreaPicker />
+        <FilterPanel />
+      </div>
+
+      <div class="results-panel">
+        <h2>Routes</h2>
+        <ul class="result-list">
+          {
+            routes.map((route) => (
+              <li>
+                <ResultCard route={route} />
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <p>
+      A student redesign concept, not affiliated with or endorsed by <a
+        href="https://www.thecrag.com">thecrag.com</a
+      >, the real climbing database this reimagines.
+    </p>
+  </footer>
+  <script src="../scripts/main.ts"></script>
+</Layout>
+
+<style>
+  .site-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .page-intro {
+    max-width: 48rem;
+  }
+
+  .search-layout {
+    display: grid;
+    grid-template-columns: 20rem 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .search-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    background: var(--color-surface-alt);
+  }
+
+  .result-list {
+    display: grid;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .site-footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 700px) {
+    .search-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

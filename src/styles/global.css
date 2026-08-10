@@ -1,0 +1,43 @@
+:root {
+  --color-bg: #faf6f0;
+  --color-surface: #fff;
+  --color-surface-alt: #f1ece2;
+  --color-border: #ddd3c2;
+  --color-text: #2b2620;
+  --color-text-muted: #6b6357;
+  --color-accent: #2f6f4f;
+  --color-accent-soft: #d9ead9;
+  --color-accent-dark: #1f4d36;
+  --color-on-accent: #fff;
+  --color-focus: #c1531f;
+}
+
+body {
+  margin: 0;
+  padding: 2rem;
+  font-family: system-ui, sans-serif;
+  line-height: 1.6;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+main {
+  max-width: 75rem;
+  margin: 0 auto;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--color-text);
+}
+
+a {
+  color: var(--color-accent-dark);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}

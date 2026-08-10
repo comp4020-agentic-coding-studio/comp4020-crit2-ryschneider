@@ -1,0 +1,151 @@
+---
+import { areas, regions } from "../data/climbing-areas";
+---
+
+<section class="area-picker" aria-labelledby="area-picker-heading">
+  <h3 id="area-picker-heading">Area</h3>
+  <p class="area-picker-hint">
+    Click a region on the map, or type an area name below.
+  </p>
+
+  <svg
+    class="area-map"
+    viewBox="0 0 400 460"
+    role="group"
+    aria-label="Map of NSW and ACT climbing regions"
+  >
+    <rect
+      class="area-map-background"
+      x="20"
+      y="10"
+      width="360"
+      height="440"
+      rx="16"
+      aria-hidden="true"
+    ></rect>
+    {
+      regions.map((region) => (
+        <g class="area-map-region" data-region-id={region.id}>
+          <ellipse
+            role="button"
+            tabindex="0"
+            aria-pressed="false"
+            aria-label={region.name}
+            cx={region.cx}
+            cy={region.cy}
+            rx={region.rx}
+            ry={region.ry}
+          ></ellipse>
+          <text
+            class="area-map-label"
+            x={region.cx}
+            y={region.cy}
+            aria-hidden="true"
+          >
+            {region.name}
+          </text>
+        </g>
+      ))
+    }
+  </svg>
+
+  <div class="area-search-field">
+    <label for="area-search">Search by area name</label>
+    <input
+      id="area-search"
+      name="area"
+      type="text"
+      list="area-options"
+      autocomplete="off"
+      placeholder="e.g. Nowra"
+    />
+    <datalist id="area-options">
+      {
+        areas.map((area) => (
+          <option
+            value={area.name}
+            data-region-id={area.regionId}
+            data-area-id={area.id}
+          />
+        ))
+      }
+    </datalist>
+  </div>
+
+  <p class="area-picker-selected" aria-live="polite">
+    <span id="selected-area-label">No area selected</span>
+  </p>
+</section>
+
+<style>
+  .area-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .area-picker-hint {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+  }
+
+  .area-map {
+    width: 100%;
+    height: auto;
+    max-height: 20rem;
+  }
+
+  .area-map-background {
+    fill: var(--color-surface-alt);
+  }
+
+  .area-map-region ellipse {
+    fill: var(--color-accent-soft);
+    stroke: var(--color-accent);
+    stroke-width: 2;
+    cursor: pointer;
+    transition: fill 0.15s ease;
+  }
+
+  .area-map-region:hover ellipse,
+  .area-map-region ellipse:focus-visible {
+    fill: var(--color-accent);
+  }
+
+  .area-map-region.is-selected ellipse {
+    fill: var(--color-accent);
+    stroke: var(--color-accent-dark);
+  }
+
+  .area-map-region ellipse:focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  .area-map-label {
+    font-size: 0.8rem;
+    text-anchor: middle;
+    fill: var(--color-text);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .area-search-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .area-search-field input {
+    padding: 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.375rem;
+    font-size: 1rem;
+  }
+
+  .area-picker-selected {
+    margin: 0;
+    font-weight: 600;
+  }
+</style>
