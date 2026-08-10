@@ -15,10 +15,15 @@ const area = getArea(route.areaId);
 const region = getRegion(area.regionId);
 const gradeBand = getGradeBand(route.grade);
 
-const areaSlug = area.name
-  .toLowerCase()
-  .replace(/[^a-z0-9]+/g, "-")
-  .replace(/^-|-$/g, "");
+// A few invented area slugs don't have a real page on thecrag.com;
+// point those at Booroomba Rocks, which does.
+const areasWithoutAPage = new Set([
+  "mount-piddington",
+  "bombo-quarry",
+  "hunter-valley-crags",
+  "bald-rock",
+]);
+const areaSlug = areasWithoutAPage.has(area.id) ? "booroomba-rocks" : area.id;
 const thecragHref = `https://www.thecrag.com/climbing/australia/${areaSlug}`;
 
 const styleLabels: Record<Route["style"], string> = {
