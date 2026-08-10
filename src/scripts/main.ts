@@ -1,6 +1,7 @@
-// This prototype's search is deliberately non-functional: nothing below
-// changes what's shown in the results list. It's a static UI/UX mockup of a
-// better filtering experience, not a working search — see spec/README.md.
+// Selecting an area (via the map or the text search below) actually filters
+// the results list — see setupAreaPicker(). The rest of the filter panel
+// (grade slider, style/stars chips, "more filters") stays a static mockup of
+// the interaction, not wired up to the results — see spec/README.md.
 
 function setupAreaPicker(): void {
   const root = document.querySelector<HTMLElement>(".area-picker");
@@ -11,11 +12,51 @@ function setupAreaPicker(): void {
   const selectedLabel = root.querySelector<HTMLElement>(
     "#selected-area-label",
   );
+  const clearButton = root.querySelector<HTMLButtonElement>(
+    "[data-area-clear]",
+  );
   const options = root.querySelectorAll<HTMLOptionElement>(
     "#area-options option",
   );
 
-  function selectRegion(regionId: string | null, label: string): void {
+  const resultItems = document.querySelectorAll<HTMLLIElement>(
+    "li[data-area-id]",
+  );
+  const resultsCount = document.querySelector<HTMLElement>(
+    "[data-results-count]",
+  );
+  const resultsEmpty = document.querySelector<HTMLElement>(
+    "[data-results-empty]",
+  );
+  const totalRoutes = resultItems.length;
+
+  function applyFilter(regionId: string | null, areaId: string | null): void {
+    let visibleCount = 0;
+    resultItems.forEach((item) => {
+      const matches = areaId
+        ? item.dataset.areaId === areaId
+        : regionId
+          ? item.dataset.regionId === regionId
+          : true;
+      item.hidden = !matches;
+      if (matches) visibleCount += 1;
+    });
+
+    if (resultsCount) {
+      resultsCount.textContent =
+        regionId || areaId
+          ? `Showing ${visibleCount} of ${totalRoutes} routes`
+          : `Showing all ${totalRoutes} routes`;
+    }
+    if (resultsEmpty) resultsEmpty.hidden = visibleCount > 0;
+    if (clearButton) clearButton.hidden = !regionId && !areaId;
+  }
+
+  function selectRegion(
+    regionId: string | null,
+    label: string,
+    areaId: string | null = null,
+  ): void {
     regionGroups.forEach((group) => {
       const ellipse = group.querySelector("ellipse");
       const isMatch = group.dataset.regionId === regionId;
@@ -25,6 +66,7 @@ function setupAreaPicker(): void {
     if (selectedLabel) {
       selectedLabel.textContent = regionId ? label : "No area selected";
     }
+    applyFilter(regionId, areaId);
   }
 
   regionGroups.forEach((group) => {
@@ -59,12 +101,22 @@ function setupAreaPicker(): void {
       (option) => option.value.toLowerCase() === value,
     );
     if (match) {
-      selectRegion(match.dataset.regionId ?? null, match.value);
+      selectRegion(
+        match.dataset.regionId ?? null,
+        match.value,
+        match.dataset.areaId ?? null,
+      );
     }
   };
 
   searchInput?.addEventListener("input", lookupTypedArea);
   goButton?.addEventListener("click", lookupTypedArea);
+
+  clearButton?.addEventListener("click", () => {
+    if (searchInput) searchInput.value = "";
+    selectRegion(null, "");
+    searchInput?.focus();
+  });
 }
 
 function setupGradeSlider(): void {

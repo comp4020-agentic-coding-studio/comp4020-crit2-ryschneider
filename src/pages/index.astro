@@ -3,7 +3,7 @@ import AreaPicker from "../components/AreaPicker.astro";
 import FilterPanel from "../components/FilterPanel.astro";
 import ResultCard from "../components/ResultCard.astro";
 import Layout from "../layouts/Layout.astro";
-import { areas, regions, routes } from "../data/climbing-areas";
+import { areas, getArea, regions, routes } from "../data/climbing-areas";
 ---
 
 <Layout title="thecrag.com search, redesigned">
@@ -70,9 +70,9 @@ import { areas, regions, routes } from "../data/climbing-areas";
 
     <p class="page-intro">
       Pick an area from a map instead of a breadcrumb, and filter with
-      sliders and chips instead of a long list of checkboxes. This is a
-      static prototype: choosing an area or a filter below changes how it
-      looks, not which routes appear in the results.
+      sliders and chips instead of a long list of checkboxes. Selecting an
+      area narrows the results below to that area; the other filters are a
+      static prototype of the interaction, not wired up yet.
     </p>
 
     <section class="search-layout" aria-labelledby="search-heading">
@@ -84,15 +84,24 @@ import { areas, regions, routes } from "../data/climbing-areas";
 
       <div class="results-panel">
         <h2>Routes</h2>
+        <p class="results-count" data-results-count aria-live="polite">
+          Showing all {routes.length} routes
+        </p>
         <ul class="result-list">
           {
-            routes.map((route) => (
-              <li>
-                <ResultCard route={route} />
-              </li>
-            ))
+            routes.map((route) => {
+              const area = getArea(route.areaId);
+              return (
+                <li data-area-id={route.areaId} data-region-id={area.regionId}>
+                  <ResultCard route={route} />
+                </li>
+              );
+            })
           }
         </ul>
+        <p class="results-empty" data-results-empty hidden>
+          No routes in this area yet — try another region.
+        </p>
       </div>
     </section>
   </main>
@@ -243,12 +252,23 @@ import { areas, regions, routes } from "../data/climbing-areas";
     background: var(--color-surface-alt);
   }
 
+  .results-count {
+    margin: 0 0 1rem;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+  }
+
   .result-list {
     display: grid;
     gap: 1rem;
     list-style: none;
     margin: 0;
     padding: 0;
+  }
+
+  .results-empty {
+    margin: 1rem 0 0;
+    color: var(--color-text-muted);
   }
 
   .site-footer {

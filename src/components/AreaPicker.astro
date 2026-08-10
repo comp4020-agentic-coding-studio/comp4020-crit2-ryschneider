@@ -77,6 +77,9 @@ import { areas, regions } from "../data/climbing-areas";
 
   <p class="area-picker-selected" aria-live="polite">
     <span id="selected-area-label">No area selected</span>
+    <button type="button" class="area-picker-clear" data-area-clear hidden>
+      Clear
+    </button>
   </p>
 </section>
 
@@ -170,6 +173,20 @@ import { areas, regions } from "../data/climbing-areas";
 
   .area-picker-selected {
     margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     font-weight: 600;
+  }
+
+  .area-picker-clear {
+    border: none;
+    background: none;
+    padding: 0;
+    color: var(--color-link);
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-decoration: underline;
   }
 </style>
