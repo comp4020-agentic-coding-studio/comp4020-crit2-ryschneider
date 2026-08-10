@@ -15,7 +15,7 @@ import { areas, regions } from "../data/climbing-areas";
     aria-label="Map of NSW and ACT climbing regions"
   >
     <rect
-      class="area-map-background"
+      class="area-map-sea"
       x="20"
       y="10"
       width="360"
@@ -23,6 +23,17 @@ import { areas, regions } from "../data/climbing-areas";
       rx="16"
       aria-hidden="true"
     ></rect>
+    <path
+      class="area-map-land"
+      aria-hidden="true"
+      d="M70,20 C140,5 250,8 310,20 C345,28 365,55 372,95
+         C380,140 358,175 368,215 C378,255 390,290 372,330
+         C358,362 330,380 345,410 C355,430 320,445 270,448
+         L110,448 C65,445 42,420 48,385 C30,360 40,320 32,285
+         C24,250 38,215 30,180 C22,145 40,110 34,75
+         C40,45 55,28 70,20 Z"
+    ></path>
+    <text x="60" y="430" class="area-map-compass" aria-hidden="true">N ↑</text>
     {
       regions.map((region) => (
         <g class="area-map-region" data-region-id={region.id}>
@@ -102,12 +113,27 @@ import { areas, regions } from "../data/climbing-areas";
     max-height: 20rem;
   }
 
-  .area-map-background {
-    fill: var(--color-surface-alt);
+  .area-map-sea {
+    fill: #cfe7f2;
+  }
+
+  .area-map-land {
+    fill: #e3edd3;
+    stroke: #9db989;
+    stroke-width: 2;
+    stroke-linejoin: round;
+  }
+
+  .area-map-compass {
+    font-size: 0.75rem;
+    font-weight: 600;
+    fill: var(--color-text-muted);
+    user-select: none;
   }
 
   .area-map-region ellipse {
     fill: var(--color-accent-soft);
+    fill-opacity: 0.85;
     stroke: var(--color-accent);
     stroke-width: 2;
     cursor: pointer;
@@ -117,10 +143,12 @@ import { areas, regions } from "../data/climbing-areas";
   .area-map-region:hover ellipse,
   .area-map-region ellipse:focus-visible {
     fill: var(--color-accent);
+    fill-opacity: 0.95;
   }
 
   .area-map-region.is-selected ellipse {
     fill: var(--color-accent);
+    fill-opacity: 0.95;
     stroke: var(--color-accent-dark);
   }
 
@@ -133,6 +161,9 @@ import { areas, regions } from "../data/climbing-areas";
     font-size: 0.8rem;
     text-anchor: middle;
     fill: var(--color-text);
+    paint-order: stroke;
+    stroke: var(--color-surface);
+    stroke-width: 3px;
     pointer-events: none;
     user-select: none;
   }
