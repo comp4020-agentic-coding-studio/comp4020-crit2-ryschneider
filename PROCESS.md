@@ -1,9 +1,5 @@
 # Process overview
 
-<!-- TEMPLATE: this file is a shape to fill in, not a form. Replace everything
-     in it with your own overview, and delete this comment — `pnpm
-     check:evidence` will remind you if it's still here. -->
-
 A reading-guide to how the work came together --- a map to your process, not an
 essay about it. Markers read this file and follow its citations; they don't
 trawl the repo for evidence you didn't point at, so if a moment mattered, cite
@@ -17,60 +13,56 @@ cover every deliverable.
 
 ## What I built
 
-One paragraph: the thing, and the idea behind it.
+An unsolicited redesign of thecrag.com's route search: an area picker (a
+clickable NSW/ACT region map plus a text fallback), a filter panel (grade
+range, style, star rating), and a results list of route cards, all client-side
+against a small bundled route catalogue rather than a live API
+([`6e1e1a4`](https://github.com/comp4020-agentic-coding-studio/comp4020-crit2-ryschneider/commit/6e1e1a4b562818763c072ff01f5d43023aec2f45)).
+The idea was to keep the parts of the original that work --- a dense,
+scannable results list --- while replacing the parts that don't: the area
+picker gives a spatial shortcut into the region hierarchy instead of a plain
+dropdown, and every interactive control carries the ARIA labelling and
+keyboard semantics the original page was missing.
 
 ## The moments that mattered
 
-Three or four for an assignment; fewer is fine for a weekly prototype. Keep the
-list short so each moment has room to do all four jobs:
+1. **What happened**: nothing in this repo's check roster measures
+   accessibility --- `CLAUDE.md` says as much explicitly, and calls wiring that
+   sensor out as the student's own work rather than something the template
+   gives you for free. Before this, the only signal on the page's structure
+   was `spec/invariants.test.ts`'s single generic heading-count check, which
+   can't catch a broken heading *order*.
+2. **What I did instead of the obvious thing**: the obvious move is to eyeball
+   the rendered page and judge accessibility by look. Instead I added
+   `spec/accessibility.test.ts`, which parses the built `dist/index.html` with
+   jsdom and runs it through `axe-core`, following the same
+   read-the-built-output pattern the existing spec tests already use. I turned
+   off `color-contrast` and `focus-order-semantics` deliberately rather than
+   leaving them silently green: jsdom doesn't paint or lay out the page, so a
+   passing result for those two rules there would be meaningless, not
+   reassuring.
+3. **How I knew it was right**: the first run wasn't a clean pass to rubber-stamp
+   --- it failed with a real `heading-order` violation. The results list's
+   `<h2>Routes</h2>` was followed by each route card's name in an `<h4>`, with
+   no `<h3>` between them. I fixed the card heading to `<h3>` and re-ran the
+   full `pnpm check` roster (typecheck, build, lint, and the whole `vitest`
+   suite, now 4 files / 17 tests), which went green, rather than just re-running
+   the one new test in isolation.
+4. **The citation**:
+   [`096234a`](https://github.com/comp4020-agentic-coding-studio/comp4020-crit2-ryschneider/commit/096234a)
+   adds the sensor and the fix it found in the same commit --- the test and the
+   bug it caught belong together in the history.
 
-1. **what happened** --- the problem, or the thing the agent got wrong
-2. **what you did instead of the obvious thing** --- the call you made, and why
-   it beat the obvious one
-3. **how you knew it was right** --- the check you ran, the viewport you looked
-   at, what you read before accepting the diff
-4. **the citation** --- a commit or commit range, a `CLAUDE.md` change, a check
-   that went from red to green, a prompt paired with the commit it produced
+## Before you ship
 
-Jobs 2 and 3 are the ones the repo can't tell a reader on its own, so they're
-where the marks are. The strongest moments are the ones where a correction
-landed in the **harness** rather than in another prompt --- a rule added to
-`CLAUDE.md`, a check wired up, an attempt thrown away: re-prompting until it
-passes is the routine case, and changing what the agent works against is the
-skilled one.
-
-Cite each moment as a link whose text is the commit hash or range and whose
-target is this repo's commit or compare URL, so a reader clicks straight to the
-evidence:
-
-- one commit: [`a1b2c3d`](https://github.com/YOUR-ORG/YOUR-REPO/commit/a1b2c3d)
-- a range:
-  [`a1b2c3d...e4f5a6b`](https://github.com/YOUR-ORG/YOUR-REPO/compare/a1b2c3d...e4f5a6b)
-
-To pair a prompt with the commit it produced, quote the prompt (curated, not a
-full transcript) next to the citation:
-
-> the prompt, verbatim
-
-Screenshots are welcome where one carries the verification better than a
-sentence does. Commit the file to this repo and link it with a **relative**
-path, which is what makes it render on GitHub: `![alt text](docs/before.png)`.
-Images don't count towards the word count and don't replace the citation.
-
-### A worked moment, for shape
-
-Delete this section along with the rest of the boilerplate --- it's here to show
-the four jobs in one paragraph, not to be imitated in content.
-
-> The date formatter kept coming back with `toLocaleDateString()` and no locale
-> argument, so the same build rendered differently on my machine and in CI. I'd
-> already re-prompted it twice, which fixed the line but not the habit, so the
-> third time I put the rule in `CLAUDE.md` instead
-> ([`3f9ac21`](https://github.com/YOUR-ORG/YOUR-REPO/commit/3f9ac21)) and added
-> a spec test that fails on a bare `toLocaleDateString`. That's what told me it
-> had actually taken: the test went red against the old code and green against
-> the new, and the next two features it wrote passed it without prompting
-> ([`3f9ac21...b7e0d14`](https://github.com/YOUR-ORG/YOUR-REPO/compare/3f9ac21...b7e0d14)).
+I also ran `pnpm dlx linkinator ./dist --silent` locally per the workflow this
+file recommends, staged under a directory named for the deployed base path
+(`.../comp4020-crit2-ryschneider/index.html`) with `--server-root` pointed at
+its parent so the absolute asset paths resolve the way they will on the real
+GitHub Pages URL rather than 404'ing against an unprefixed local `dist/`. All
+internal links resolved; the only non-2xx result was a `403` from
+`thecrag.com` itself on an anti-bot HEAD request, not a link this site
+controls.
 
 ## Before you ship
 
