@@ -8,15 +8,11 @@ function setupAreaPicker(): void {
   if (!root) return;
 
   const regionGroups = root.querySelectorAll<SVGGElement>(".area-map-region");
-  const searchInput = root.querySelector<HTMLInputElement>("#area-search");
   const selectedLabel = root.querySelector<HTMLElement>(
     "#selected-area-label",
   );
   const clearButton = root.querySelector<HTMLButtonElement>(
     "[data-area-clear]",
-  );
-  const options = root.querySelectorAll<HTMLOptionElement>(
-    "#area-options option",
   );
 
   const resultItems = document.querySelectorAll<HTMLLIElement>(
@@ -30,33 +26,24 @@ function setupAreaPicker(): void {
   );
   const totalRoutes = resultItems.length;
 
-  function applyFilter(regionId: string | null, areaId: string | null): void {
+  function applyFilter(regionId: string | null): void {
     let visibleCount = 0;
     resultItems.forEach((item) => {
-      const matches = areaId
-        ? item.dataset.areaId === areaId
-        : regionId
-          ? item.dataset.regionId === regionId
-          : true;
+      const matches = regionId ? item.dataset.regionId === regionId : true;
       item.hidden = !matches;
       if (matches) visibleCount += 1;
     });
 
     if (resultsCount) {
-      resultsCount.textContent =
-        regionId || areaId
-          ? `Showing ${visibleCount} of ${totalRoutes} routes`
-          : `Showing all ${totalRoutes} routes`;
+      resultsCount.textContent = regionId
+        ? `Showing ${visibleCount} of ${totalRoutes} routes`
+        : `Showing all ${totalRoutes} routes`;
     }
     if (resultsEmpty) resultsEmpty.hidden = visibleCount > 0;
-    if (clearButton) clearButton.hidden = !regionId && !areaId;
+    if (clearButton) clearButton.hidden = !regionId;
   }
 
-  function selectRegion(
-    regionId: string | null,
-    label: string,
-    areaId: string | null = null,
-  ): void {
+  function selectRegion(regionId: string | null, label: string): void {
     regionGroups.forEach((group) => {
       const ellipse = group.querySelector("ellipse");
       const isMatch = group.dataset.regionId === regionId;
@@ -66,7 +53,7 @@ function setupAreaPicker(): void {
     if (selectedLabel) {
       selectedLabel.textContent = regionId ? label : "No area selected";
     }
-    applyFilter(regionId, areaId);
+    applyFilter(regionId);
   }
 
   regionGroups.forEach((group) => {
@@ -77,7 +64,6 @@ function setupAreaPicker(): void {
 
     const activate = (): void => {
       selectRegion(regionId, name);
-      if (searchInput) searchInput.value = name;
     };
 
     ellipse.addEventListener("click", activate);
@@ -90,32 +76,8 @@ function setupAreaPicker(): void {
     });
   });
 
-  const goButton = root.querySelector<HTMLButtonElement>(
-    "[data-area-search-go]",
-  );
-
-  const lookupTypedArea = (): void => {
-    if (!searchInput) return;
-    const value = searchInput.value.trim().toLowerCase();
-    const match = [...options].find(
-      (option) => option.value.toLowerCase() === value,
-    );
-    if (match) {
-      selectRegion(
-        match.dataset.regionId ?? null,
-        match.value,
-        match.dataset.areaId ?? null,
-      );
-    }
-  };
-
-  searchInput?.addEventListener("input", lookupTypedArea);
-  goButton?.addEventListener("click", lookupTypedArea);
-
   clearButton?.addEventListener("click", () => {
-    if (searchInput) searchInput.value = "";
     selectRegion(null, "");
-    searchInput?.focus();
   });
 }
 

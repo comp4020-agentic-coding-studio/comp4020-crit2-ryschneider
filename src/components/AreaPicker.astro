@@ -1,13 +1,11 @@
 ---
 import mapImage from "../assets/area-map.png";
-import { areas, regions } from "../data/climbing-areas";
+import { regions } from "../data/climbing-areas";
 ---
 
 <section class="area-picker" aria-labelledby="area-picker-heading">
   <h3 id="area-picker-heading">Area</h3>
-  <p class="area-picker-hint">
-    Click a region on the map, or type an area name below.
-  </p>
+  <p class="area-picker-hint">Click a region on the map to filter by area.</p>
 
   <svg
     class="area-map"
@@ -64,32 +62,6 @@ import { areas, regions } from "../data/climbing-areas";
       ))
     }
   </svg>
-
-  <div class="area-search-field">
-    <label for="area-search">Search by area name</label>
-    <div class="area-search-bar">
-      <input
-        id="area-search"
-        name="area"
-        type="text"
-        list="area-options"
-        autocomplete="off"
-        placeholder="e.g. Nowra"
-      />
-      <button type="button" data-area-search-go>Go</button>
-    </div>
-    <datalist id="area-options">
-      {
-        areas.map((area) => (
-          <option
-            value={area.name}
-            data-region-id={area.regionId}
-            data-area-id={area.id}
-          />
-        ))
-      }
-    </datalist>
-  </div>
 
   <p class="area-picker-selected" aria-live="polite">
     <span id="selected-area-label">No area selected</span>
@@ -169,40 +141,6 @@ import { areas, regions } from "../data/climbing-areas";
     stroke-width: 3px;
     pointer-events: none;
     user-select: none;
-  }
-
-  .area-search-field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .area-search-bar {
-    display: flex;
-  }
-
-  .area-search-bar input {
-    flex: 1;
-    min-width: 0;
-    padding: 0.5rem;
-    border: 1px solid var(--color-border);
-    border-right: none;
-    border-radius: 0.375rem 0 0 0.375rem;
-    font-size: 1rem;
-  }
-
-  .area-search-bar button {
-    padding: 0.5rem 1rem;
-    border: 1px solid var(--color-accent-dark);
-    border-radius: 0 0.375rem 0.375rem 0;
-    background: var(--color-accent);
-    color: var(--color-on-accent);
-    font-weight: 600;
-    cursor: pointer;
-  }
-
-  .area-search-bar button:hover {
-    background: var(--color-accent-dark);
   }
 
   .area-picker-selected {
