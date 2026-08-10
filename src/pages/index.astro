@@ -3,24 +3,76 @@ import AreaPicker from "../components/AreaPicker.astro";
 import FilterPanel from "../components/FilterPanel.astro";
 import ResultCard from "../components/ResultCard.astro";
 import Layout from "../layouts/Layout.astro";
-import { routes } from "../data/climbing-areas";
+import { areas, regions, routes } from "../data/climbing-areas";
 ---
 
 <Layout title="thecrag.com search, redesigned">
-  <header class="site-header">
-    <nav aria-label="Primary">
-      <a href="./">Home</a>
-    </nav>
+  <header>
+    <p class="site-utility-bar">
+      An unsolicited student redesign — not affiliated with thecrag.com.
+    </p>
+    <div class="site-header">
+      <span class="site-brand">
+        <span class="site-logo-mark" aria-hidden="true"></span>
+        <span class="site-wordmark">
+          <span class="site-wordmark-thin">the</span>Crag<span
+            class="site-wordmark-note">, redesigned</span
+          >
+        </span>
+      </span>
+      <nav aria-label="Primary">
+        <a href="./">Home</a>
+      </nav>
+    </div>
   </header>
   <main>
-    <h1>A friendlier way to find a climb</h1>
+    <section class="hero">
+      <svg
+        class="hero-illustration"
+        viewBox="0 0 1200 360"
+        preserveAspectRatio="xMidYMid slice"
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id="hero-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1c3f66"></stop>
+            <stop offset="55%" stop-color="#d97b3f"></stop>
+            <stop offset="100%" stop-color="#f3c77a"></stop>
+          </linearGradient>
+        </defs>
+        <rect width="1200" height="360" fill="url(#hero-sky)"></rect>
+        <circle cx="960" cy="160" r="70" fill="#ffe9c2" opacity="0.9"
+        ></circle>
+        <polygon
+          points="0,360 140,190 300,290 470,120 640,270 800,150 980,290 1160,200 1200,240 1200,360"
+          fill="#152238"
+          opacity="0.88"
+        ></polygon>
+        <polygon
+          points="0,360 90,260 220,320 380,210 500,300 500,360"
+          fill="#0d1729"
+        ></polygon>
+      </svg>
+      <div class="hero-content">
+        <h1>A friendlier way to find a climb</h1>
+        <p class="hero-tagline">
+          An unsolicited redesign of <a href="https://www.thecrag.com"
+            >thecrag.com</a
+          >'s route search.
+        </p>
+        <p class="hero-stats">
+          <span><strong>{regions.length}</strong> regions</span>
+          <span><strong>{areas.length}</strong> areas</span>
+          <span><strong>{routes.length}</strong> routes</span>
+        </p>
+      </div>
+    </section>
+
     <p class="page-intro">
-      An unsolicited redesign of <a href="https://www.thecrag.com"
-        >thecrag.com</a
-      >'s route search — pick an area from a map instead of a breadcrumb, and
-      filter with sliders and chips instead of a long list of checkboxes.
-      This is a static prototype: choosing an area or a filter below changes
-      how it looks, not which routes appear in the results.
+      Pick an area from a map instead of a breadcrumb, and filter with
+      sliders and chips instead of a long list of checkboxes. This is a
+      static prototype: choosing an area or a filter below changes how it
+      looks, not which routes appear in the results.
     </p>
 
     <section class="search-layout" aria-labelledby="search-heading">
@@ -55,8 +107,119 @@ import { routes } from "../data/climbing-areas";
 </Layout>
 
 <style>
+  .site-utility-bar {
+    margin: 0;
+    padding: 0.4rem 2rem;
+    background: var(--color-header-bg);
+    color: var(--color-on-header);
+    font-size: 0.8rem;
+  }
+
   .site-header {
-    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 2rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .site-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .site-logo-mark {
+    display: inline-block;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.4rem;
+    overflow: hidden;
+    background: linear-gradient(
+      135deg,
+      var(--color-logo-sky) 0% 55%,
+      var(--color-logo-hill) 55% 100%
+    );
+  }
+
+  .site-wordmark {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .site-wordmark-thin {
+    font-weight: 300;
+  }
+
+  .site-wordmark-note {
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--color-text-muted);
+  }
+
+  .site-header nav a {
+    color: var(--color-link);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .site-header nav a:hover {
+    text-decoration: underline;
+  }
+
+  .hero {
+    position: relative;
+    margin-bottom: 2rem;
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+
+  .hero-illustration {
+    display: block;
+    width: 100%;
+    height: 16rem;
+  }
+
+  .hero-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1.5rem 2rem;
+    color: #fff;
+    text-shadow: 0 1px 3px rgb(0 0 0 / 60%);
+  }
+
+  .hero-content h1 {
+    margin: 0;
+    color: #fff;
+    font-size: 2rem;
+  }
+
+  .hero-tagline {
+    margin: 0;
+    max-width: 32rem;
+  }
+
+  .hero-tagline a {
+    color: #fff;
+    text-decoration: underline;
+  }
+
+  .hero-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin: 0.5rem 0 0;
+    font-size: 1.1rem;
+  }
+
+  .hero-stats strong {
+    font-size: 1.4rem;
   }
 
   .page-intro {
@@ -89,8 +252,9 @@ import { routes } from "../data/climbing-areas";
   }
 
   .site-footer {
-    margin-top: 3rem;
-    padding-top: 1.5rem;
+    max-width: 75rem;
+    margin: 3rem auto 0;
+    padding: 1.5rem 2rem 2rem;
     border-top: 1px solid var(--color-border);
     color: var(--color-text-muted);
     font-size: 0.9rem;

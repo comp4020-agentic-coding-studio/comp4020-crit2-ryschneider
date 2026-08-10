@@ -1,5 +1,10 @@
 ---
-import { getArea, getRegion, type Route } from "../data/climbing-areas";
+import {
+  getArea,
+  getGradeBand,
+  getRegion,
+  type Route,
+} from "../data/climbing-areas";
 
 interface Props {
   route: Route;
@@ -8,6 +13,7 @@ interface Props {
 const { route } = Astro.props;
 const area = getArea(route.areaId);
 const region = getRegion(area.regionId);
+const gradeBand = getGradeBand(route.grade);
 
 const styleLabels: Record<Route["style"], string> = {
   trad: "Trad",
@@ -19,8 +25,13 @@ const styleLabels: Record<Route["style"], string> = {
 
 <article class="result-card">
   <div class="result-card-header">
-    <span class="result-card-grade">{route.gradeLabel}</span>
-    <span class="result-card-style">{styleLabels[route.style]}</span>
+    <span class="result-card-grade" data-grade-band={gradeBand}>
+      <span class="grade-dot" aria-hidden="true"></span>
+      {route.gradeLabel}
+    </span>
+    <span class="result-card-style" data-style={route.style}>
+      {styleLabels[route.style]}
+    </span>
   </div>
   <h3 class="result-card-name">{route.name}</h3>
   <p class="result-card-breadcrumb">{region.name} &rsaquo; {area.name}</p>
@@ -57,17 +68,67 @@ const styleLabels: Record<Route["style"], string> = {
   }
 
   .result-card-grade {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
     font-weight: 700;
-    background: var(--color-accent-soft);
-    padding: 0.15rem 0.5rem;
+    background: var(--color-surface-alt);
+    padding: 0.15rem 0.5rem 0.15rem 0.4rem;
     border-radius: 0.25rem;
   }
 
+  .grade-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+  }
+
+  .result-card-grade[data-grade-band="easy"] .grade-dot {
+    background: var(--grade-color-easy);
+  }
+
+  .result-card-grade[data-grade-band="moderate"] .grade-dot {
+    background: var(--grade-color-moderate);
+  }
+
+  .result-card-grade[data-grade-band="hard"] .grade-dot {
+    background: var(--grade-color-hard);
+  }
+
+  .result-card-grade[data-grade-band="extreme"] .grade-dot {
+    background: var(--grade-color-extreme);
+  }
+
   .result-card-style {
-    font-size: 0.8rem;
-    color: var(--color-text-muted);
+    display: inline-flex;
+    align-items: center;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.03em;
+  }
+
+  .result-card-style[data-style="trad"] {
+    background: var(--style-color-trad);
+    color: #fff;
+  }
+
+  .result-card-style[data-style="sport"] {
+    background: var(--color-accent);
+    color: #fff;
+  }
+
+  .result-card-style[data-style="bouldering"] {
+    background: var(--grade-color-easy);
+    color: #222;
+  }
+
+  .result-card-style[data-style="top-rope"] {
+    background: var(--color-focus);
+    color: #222;
   }
 
   .result-card-name {

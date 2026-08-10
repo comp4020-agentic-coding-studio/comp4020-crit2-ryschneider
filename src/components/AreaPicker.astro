@@ -51,14 +51,17 @@ import { areas, regions } from "../data/climbing-areas";
 
   <div class="area-search-field">
     <label for="area-search">Search by area name</label>
-    <input
-      id="area-search"
-      name="area"
-      type="text"
-      list="area-options"
-      autocomplete="off"
-      placeholder="e.g. Nowra"
-    />
+    <div class="area-search-bar">
+      <input
+        id="area-search"
+        name="area"
+        type="text"
+        list="area-options"
+        autocomplete="off"
+        placeholder="e.g. Nowra"
+      />
+      <button type="button" data-area-search-go>Go</button>
+    </div>
     <datalist id="area-options">
       {
         areas.map((area) => (
@@ -137,11 +140,32 @@ import { areas, regions } from "../data/climbing-areas";
     gap: 0.25rem;
   }
 
-  .area-search-field input {
+  .area-search-bar {
+    display: flex;
+  }
+
+  .area-search-bar input {
+    flex: 1;
+    min-width: 0;
     padding: 0.5rem;
     border: 1px solid var(--color-border);
-    border-radius: 0.375rem;
+    border-right: none;
+    border-radius: 0.375rem 0 0 0.375rem;
     font-size: 1rem;
+  }
+
+  .area-search-bar button {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--color-accent-dark);
+    border-radius: 0 0.375rem 0.375rem 0;
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .area-search-bar button:hover {
+    background: var(--color-accent-dark);
   }
 
   .area-picker-selected {

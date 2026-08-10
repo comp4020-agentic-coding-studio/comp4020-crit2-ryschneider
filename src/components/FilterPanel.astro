@@ -52,6 +52,12 @@ const conditions = ["Dry only", "OK if seeping", "Shaded"];
       &ndash;
       <output for="grade-max" data-grade-max-output>24</output>
     </p>
+    <p class="grade-slider-legend">
+      <span><span class="legend-dot" data-band="easy"></span>Easy</span>
+      <span><span class="legend-dot" data-band="moderate"></span>Moderate</span>
+      <span><span class="legend-dot" data-band="hard"></span>Hard</span>
+      <span><span class="legend-dot" data-band="extreme"></span>Extreme</span>
+    </p>
   </div>
 
   <fieldset class="filter-group">
@@ -179,15 +185,22 @@ const conditions = ["Dry only", "OK if seeping", "Shaded"];
     position: absolute;
     left: 0;
     right: 0;
-    height: 0.3rem;
-    background: var(--color-border);
+    height: 0.4rem;
     border-radius: 999px;
+    background: linear-gradient(
+      to right,
+      var(--grade-color-easy) 0% 35%,
+      var(--grade-color-moderate) 35% 55%,
+      var(--grade-color-hard) 55% 74%,
+      var(--grade-color-extreme) 74% 100%
+    );
   }
 
   .grade-slider-highlight {
     position: absolute;
     height: 100%;
-    background: var(--color-accent);
+    box-sizing: border-box;
+    border: 2px solid var(--color-accent-dark);
     border-radius: 999px;
     left: var(--grade-min-percent, 0%);
     right: var(--grade-max-percent, 0%);
@@ -236,6 +249,43 @@ const conditions = ["Dry only", "OK if seeping", "Shaded"];
   .grade-slider-readout {
     margin: 0;
     color: var(--color-text-muted);
+  }
+
+  .grade-slider-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+  }
+
+  .grade-slider-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .legend-dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+  }
+
+  .legend-dot[data-band="easy"] {
+    background: var(--grade-color-easy);
+  }
+
+  .legend-dot[data-band="moderate"] {
+    background: var(--grade-color-moderate);
+  }
+
+  .legend-dot[data-band="hard"] {
+    background: var(--grade-color-hard);
+  }
+
+  .legend-dot[data-band="extreme"] {
+    background: var(--grade-color-extreme);
   }
 
   .chip-row {

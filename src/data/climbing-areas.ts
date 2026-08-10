@@ -115,6 +115,15 @@ export const routes: Route[] = [
   { id: "r20", areaId: "bald-rock", name: "Dome Wanderer", grade: 11, gradeLabel: "11", style: "trad", stars: 3, note: "Low-angle granite, long approach walk." },
 ];
 
+export type GradeBand = "easy" | "moderate" | "hard" | "extreme";
+
+export function getGradeBand(grade: number): GradeBand {
+  if (grade <= 12) return "easy";
+  if (grade <= 18) return "moderate";
+  if (grade <= 24) return "hard";
+  return "extreme";
+}
+
 export function getArea(id: string): Area {
   const area = areas.find((a) => a.id === id);
   if (!area) {

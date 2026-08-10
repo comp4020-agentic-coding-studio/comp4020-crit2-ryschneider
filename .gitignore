@@ -21,3 +21,9 @@ mise.local.toml
 # harness is CLAUDE.md (and any AGENTS.md), not this directory.
 .claude/
 .astro/
+
+# local-only design research: scraped copies of thecrag.com used as a visual
+# reference while restyling the redesign. Not part of the site, and this
+# repo goes public when shipped, so keep it out of git rather than commit a
+# third party's HTML/CSS/screenshots. See reference/thecrag/NOTES.md.
+reference/

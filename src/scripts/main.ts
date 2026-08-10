@@ -48,17 +48,23 @@ function setupAreaPicker(): void {
     });
   });
 
-  if (searchInput) {
-    searchInput.addEventListener("input", () => {
-      const value = searchInput.value.trim().toLowerCase();
-      const match = [...options].find(
-        (option) => option.value.toLowerCase() === value,
-      );
-      if (match) {
-        selectRegion(match.dataset.regionId ?? null, match.value);
-      }
-    });
-  }
+  const goButton = root.querySelector<HTMLButtonElement>(
+    "[data-area-search-go]",
+  );
+
+  const lookupTypedArea = (): void => {
+    if (!searchInput) return;
+    const value = searchInput.value.trim().toLowerCase();
+    const match = [...options].find(
+      (option) => option.value.toLowerCase() === value,
+    );
+    if (match) {
+      selectRegion(match.dataset.regionId ?? null, match.value);
+    }
+  };
+
+  searchInput?.addEventListener("input", lookupTypedArea);
+  goButton?.addEventListener("click", lookupTypedArea);
 }
 
 function setupGradeSlider(): void {
